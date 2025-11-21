@@ -1,0 +1,87 @@
+- name: Instalar paquetes necesarios para LEMP (Nginx, PHP-FPM)
+  apt:
+    name:
+      - nginx
+      - php-fpm
+      - php-mysql
+      - php-mbstring
+      - git
+    state: present
+    update_cache: yes
+
+- name: Detectar versión de PHP instalada
+  shell: php -r 'echo PHP_MAJOR_VERSION.".".PHP_MINOR_VERSION;'
+  register: detected_php_version
+  changed_when: false
+
+- name: Usar versión detectada de PHP
+  set_fact:
+    php_version: "{{ detected_php_version.stdout }}"
+
+- name: Mostrar versión de PHP detectada
+  debug:
+    msg: "Usando PHP version: {{ php_version }}"
+
+- name: Configuración de virtualhost para Nginx
+  template: 
+    src: etc/nginx/vhost.j2
+    dest: /etc/nginx/sites-available/{{item["name"]}}.conf
+    owner: root
+    group: root
+  with_items:
+    - "{{virtualhosts}}"
+  notify: restart nginx
+
+- name: Crear DocumentRoot si no existe
+  ansible.builtin.file:
+    path: /{{item["datos"]["documentroot"]}}
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+  with_items:
+    - "{{virtualhosts}}"
+
+- name: Desactivar sitio default de Nginx
+  file:
+    path: /etc/nginx/sites-enabled/default
+    state: absent
+  notify: restart nginx
+
+- name: Activación de los VirtualHost
+  file:
+    src: /etc/nginx/sites-available/{{item["name"]}}.conf
+    dest: /etc/nginx/sites-enabled/{{item["name"]}}.conf
+    state: link
+  with_items:
+    - "{{virtualhosts}}"
+  notify: restart nginx
+
+- name: Copiar aplicación Guestbook
+  ansible.builtin.copy:
+    src: app/
+    dest: "/{{ base_web_path }}/"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+    directory_mode: '0755'
+  
+- name: Crear fichero de configuración config.php dentro de la aplicación
+  ansible.builtin.template:
+    src: config.php.j2
+    dest: "/{{ base_web_path }}/config.php"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Asegurar que Nginx está iniciado y habilitado
+  service:
+    name: nginx
+    state: started
+    enabled: yes
+
+- name: Asegurar que PHP-FPM está iniciado y habilitado
+  service:
+    name: php{{ php_version }}-fpm
+    state: started
+    enabled: yes

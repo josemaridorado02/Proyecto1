@@ -1,5 +1,5 @@
 # Lista con diccionarios para indicar los datos de los virtualhost que se van a crear:
-# apache2
+# nginx
 virtualhosts:
   - name: example
     datos:
@@ -9,9 +9,7 @@ virtualhosts:
       accesslog: acceses_example
 
 
-# Lista con los módulos que hay que activar
-mods_enabled:
-  - rewrite
+php_version: "8.1"
 
 
 # URL del repositorio
