@@ -1,0 +1,16 @@
+#cloud-config
+hostname: mariadb
+users:
+  - name: ubuntu
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYPIufperxZIvyON8XnMLHzamvG2u3aUpo34ZlCx98x josemariaoteodorado12@gmail.com
+
+chpasswd:
+  expire: False
+  users:
+    - name: ubuntu
+      password: asdasd
+      type: text
