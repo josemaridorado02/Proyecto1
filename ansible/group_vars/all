@@ -37,3 +37,8 @@ wordpress_auth_key: "genera-una-clave-aleatoria-aqui"
 wordpress_secure_auth_key: "genera-otra-clave-aleatoria-aqui"
 wordpress_logged_in_key: "genera-otra-clave-aleatoria-aqui"
 wordpress_nonce_key: "genera-otra-clave-aleatoria-aqui"
+
+# Configuración de phpMyAdmin
+phpmyadmin_path: "/var/www/phpmyadmin"
+phpmyadmin_domain: "phpmyadmin.example.org"
+phpmyadmin_db_host: "10.0.0.2"

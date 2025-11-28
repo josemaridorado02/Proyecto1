@@ -8,6 +8,7 @@
   roles:
    - role: nginx
    - role: wordpress
+   - role: phpmyadmin
 
 - hosts: servidores_bd
   become: true
