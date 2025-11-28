@@ -1,0 +1,17 @@
+---
+# Configuración de WordPress
+wordpress_version: "latest"
+wordpress_path: "/var/www/wordpress"
+wordpress_domain: "wordpress.example.org"
+
+# Base de datos para WordPress
+wordpress_db_name: "wordpress_db"
+wordpress_db_user: "wordpress_user"
+wordpress_db_password: "wordpress_pass"
+wordpress_db_host: "10.0.0.2"
+
+# Claves de seguridad 
+wordpress_auth_key: "pon-aqui-una-clave-aleatoria-larga"
+wordpress_secure_auth_key: "pon-aqui-otra-clave-aleatoria"
+wordpress_logged_in_key: "pon-aqui-otra-clave-aleatoria"
+wordpress_nonce_key: "pon-aqui-otra-clave-aleatoria"

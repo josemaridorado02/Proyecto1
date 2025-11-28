@@ -1,0 +1,41 @@
+server {
+    listen 80;
+    server_name {{ wordpress_domain }};
+    root {{ wordpress_path }};
+    index index.php index.html;
+
+    # Logs
+    access_log /var/log/nginx/wordpress-access.log;
+    error_log /var/log/nginx/wordpress-error.log;
+
+    # Configuración principal
+    location / {
+        try_files $uri $uri/ /index.php?$args;
+    }
+
+    # Procesar archivos PHP
+    location ~ \.php$ {
+        include snippets/fastcgi-php.conf;
+        fastcgi_pass unix:/var/run/php/php{{ php_version }}-fpm.sock;
+        fastcgi_param SCRIPT_FILENAME $document_root$fastcgi_script_name;
+        include fastcgi_params;
+    }
+
+    # Denegar acceso a archivos sensibles
+    location ~ /\.ht {
+        deny all;
+    }
+
+    location = /xmlrpc.php {
+        deny all;
+    }
+
+    # Cacheo de archivos estáticos
+    location ~* \.(js|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot)$ {
+        expires 30d;
+        add_header Cache-Control "public, immutable";
+    }
+
+    # Aumentar tamaño máximo de subida
+    client_max_body_size 64M;
+}

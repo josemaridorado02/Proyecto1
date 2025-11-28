@@ -9,8 +9,6 @@ virtualhosts:
       accesslog: acceses_example
 
 
-php_version: "8.1"
-
 
 # URL del repositorio
 guestbook_repo_url: "https://github.com/josedom24/guestbook_php.git"
@@ -25,3 +23,17 @@ guestbook_db_host: "mariadb.example.org"
 guestbook_db_user: "guestbook_user"
 guestbook_db_password: "guestbook_pass"
 guestbook_db_name: "guestbook_db"
+
+# Configuración de WordPress
+wordpress_db_name: "wordpress_db"
+wordpress_db_user: "wordpress_user"
+wordpress_db_password: "wordpress_pass"  
+wordpress_db_host: "10.0.0.2"
+wordpress_path: "/var/www/wordpress"
+wordpress_domain: "wordpress.example.org"
+
+# Claves de seguridad 
+wordpress_auth_key: "genera-una-clave-aleatoria-aqui"
+wordpress_secure_auth_key: "genera-otra-clave-aleatoria-aqui"
+wordpress_logged_in_key: "genera-otra-clave-aleatoria-aqui"
+wordpress_nonce_key: "genera-otra-clave-aleatoria-aqui"
