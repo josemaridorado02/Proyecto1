@@ -1,0 +1,9 @@
+---
+# Configuración de phpMyAdmin
+phpmyadmin_path: "/var/www/phpmyadmin"
+phpmyadmin_version: "5.2.1"  # Versión estable actual
+phpmyadmin_download_url: "https://files.phpmyadmin.net/phpMyAdmin/{{ phpmyadmin_version }}/phpMyAdmin-{{ phpmyadmin_version }}-all-languages.tar.gz"
+phpmyadmin_domain: "phpmyadmin.example.org"
+
+# Configuración del servidor de base de datos
+phpmyadmin_db_host: "10.0.0.2"

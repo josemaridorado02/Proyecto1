@@ -1,0 +1,26 @@
+<?php
+/**
+ * Configuración de phpMyAdmin generada por Ansible
+ */
+
+// Blowfish secret para encriptar cookies
+$cfg['blowfish_secret'] = '{{ lookup("password", "/dev/null chars=ascii_letters,digits length=32") }}';
+
+// Configuración del servidor
+$i = 0;
+
+// Servidor MariaDB
+$i++;
+$cfg['Servers'][$i]['auth_type'] = 'cookie';
+$cfg['Servers'][$i]['host'] = '{{ phpmyadmin_db_host }}';
+$cfg['Servers'][$i]['compress'] = false;
+$cfg['Servers'][$i]['AllowNoPassword'] = false;
+
+// Directorio temporal
+$cfg['TempDir'] = '{{ phpmyadmin_path }}/tmp';
+
+// Configuraciones de seguridad
+$cfg['DefaultLang'] = 'es';
+$cfg['ServerDefault'] = 1;
+$cfg['UploadDir'] = '';
+$cfg['SaveDir'] = '';

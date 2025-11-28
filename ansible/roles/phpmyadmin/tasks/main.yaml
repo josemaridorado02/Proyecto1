@@ -1,0 +1,82 @@
+---
+- name: Instalar dependencias de phpMyAdmin
+  apt:
+    name:
+      - php-mbstring
+      - php-zip
+      - php-gd
+      - php-json
+      - php-curl
+      - unzip
+      - wget
+    state: present
+
+- name: Descargar phpMyAdmin
+  get_url:
+    url: "{{ phpmyadmin_download_url }}"
+    dest: "/tmp/phpmyadmin.tar.gz"
+
+- name: Crear directorio para phpMyAdmin
+  file:
+    path: "{{ phpmyadmin_path }}"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0755'
+
+- name: Extraer phpMyAdmin
+  unarchive:
+    src: "/tmp/phpmyadmin.tar.gz"
+    dest: "/tmp/"
+    remote_src: yes
+
+- name: Copiar archivos de phpMyAdmin al directorio web
+  shell: "cp -r /tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages/* {{ phpmyadmin_path }}/"
+  args:
+    creates: "{{ phpmyadmin_path }}/index.php"
+
+- name: Crear directorio tmp para phpMyAdmin
+  file:
+    path: "{{ phpmyadmin_path }}/tmp"
+    state: directory
+    owner: www-data
+    group: www-data
+    mode: '0770'
+
+- name: Establecer permisos correctos
+  file:
+    path: "{{ phpmyadmin_path }}"
+    owner: www-data
+    group: www-data
+    recurse: yes
+
+- name: Crear archivo de configuración config.inc.php
+  template:
+    src: config.inc.php.j2
+    dest: "{{ phpmyadmin_path }}/config.inc.php"
+    owner: www-data
+    group: www-data
+    mode: '0644'
+
+- name: Configurar VirtualHost de Nginx para phpMyAdmin
+  template:
+    src: nginx-phpmyadmin.conf.j2
+    dest: "/etc/nginx/sites-available/phpmyadmin.conf"
+    owner: root
+    group: root
+  notify: restart nginx
+
+- name: Activar VirtualHost de phpMyAdmin
+  file:
+    src: "/etc/nginx/sites-available/phpmyadmin.conf"
+    dest: "/etc/nginx/sites-enabled/phpmyadmin.conf"
+    state: link
+  notify: restart nginx
+
+- name: Limpiar archivos temporales
+  file:
+    path: "{{ item }}"
+    state: absent
+  loop:
+    - "/tmp/phpmyadmin.tar.gz"
+    - "/tmp/phpMyAdmin-{{ phpmyadmin_version }}-all-languages"
