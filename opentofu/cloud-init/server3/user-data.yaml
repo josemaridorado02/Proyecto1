@@ -1,0 +1,27 @@
+#cloud-config
+hostname: docker
+users:
+  - name: debian
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users, admin
+    shell: /bin/bash
+    ssh-authorized-keys:
+      - ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAINYPIufperxZIvyON8XnMLHzamvG2u3aUpo34ZlCx98x josemariaoteodorado12@gmail.com
+
+chpasswd:
+  expire: False
+  users:
+    - name: debian
+      password: asdasd
+      type: text
+
+package_update: true
+package_upgrade: true
+
+packages:
+  - python3
+  - python3-apt
+
+runcmd:
+  - systemctl enable ssh
+  - systemctl start ssh

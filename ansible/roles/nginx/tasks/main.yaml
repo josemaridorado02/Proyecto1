@@ -85,3 +85,18 @@
     name: php{{ php_version }}-fpm
     state: started
     enabled: yes
+
+- name: Configurar proxy inverso para juego 2048
+  template:
+    src: etc/nginx/proxy-2048.conf.j2
+    dest: /etc/nginx/sites-available/2048.conf
+    owner: root
+    group: root
+  notify: restart nginx
+
+- name: Activar proxy inverso para juego 2048
+  file:
+    src: /etc/nginx/sites-available/2048.conf
+    dest: /etc/nginx/sites-enabled/2048.conf
+    state: link
+  notify: restart nginx

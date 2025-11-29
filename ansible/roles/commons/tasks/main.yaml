@@ -3,14 +3,19 @@
     update_cache: yes
     upgrade: yes
     cache_valid_time: 3600
+  retries: 5
+  delay: 30
+  register: result
+  until: result is succeeded
 
 - name: Añadir las entradas de la red interna al fichero /etc/hosts
   blockinfile:
     path: /etc/hosts
     marker: "# {mark} ANSIBLE RED INTERNA"
     block: |
-      10.0.0.2 mariadb.example.org
       10.0.0.1 nginx.example.org
+      10.0.0.2 mariadb.example.org
+      10.0.0.3 docker.example.org
     owner: root
     group: root
     mode: '0644'

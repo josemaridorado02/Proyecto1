@@ -1,0 +1,8 @@
+# Puerto interno donde escucha el contenedor
+docker_2048_port: 80
+
+# Nombre del contenedor
+docker_2048_container_name: "game-2048"
+
+# Imagen Docker del juego 2048
+docker_2048_image: "alexwhen/docker-2048"

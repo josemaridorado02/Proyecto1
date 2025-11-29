@@ -1,0 +1,45 @@
+- name: Actualizar cache de apt
+  apt:
+    update_cache: yes
+
+- name: Instalar Docker
+  apt:
+    name: docker.io
+    state: present
+
+- name: Asegurar que Docker está iniciado y habilitado
+  service:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Descargar imagen del juego 2048
+  command: docker pull josedom24/2048:v1
+  register: docker_pull
+  changed_when: "'Downloaded newer image' in docker_pull.stderr or 'Downloaded newer image' in docker_pull.stdout"
+
+- name: Detener contenedor existente si existe
+  command: docker stop game-2048
+  ignore_errors: yes
+  changed_when: false
+  failed_when: false
+
+- name: Eliminar contenedor existente si existe
+  command: docker rm game-2048
+  ignore_errors: yes
+  changed_when: false
+  failed_when: false
+
+- name: Ejecutar contenedor del juego 2048
+  command: docker run -d --name game-2048 --restart always -p 80:80 josedom24/2048:v1
+  register: container_start
+
+- name: Verificar que el contenedor está corriendo
+  shell: docker ps --filter name=game-2048 --format "{{ '{{' }}.Names{{ '}}' }}"
+  register: container_check
+  changed_when: false
+
+- name: Mostrar estado del contenedor
+  debug:
+    msg: "✅ Contenedor game-2048 está corriendo en el puerto 80"
+  when: "'game-2048' in container_check.stdout"
